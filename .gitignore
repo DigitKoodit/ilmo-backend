@@ -1,0 +1,8 @@
+node_modules/
+
+# build directory
+dist/
+
+# development
+.env
+.DS_STORE
