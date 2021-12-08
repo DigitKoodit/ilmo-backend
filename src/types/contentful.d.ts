@@ -10,6 +10,7 @@ export type EventContent = Entry<{
   enrollStart: string;
   enrollEnd: string;
   enrollForm: EventEnrollForm;
+  enrollmentEnabled: boolean;
 }>;
 
 export type EventEnrollForm = Entry<{

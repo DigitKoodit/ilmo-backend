@@ -6,3 +6,4 @@ dist/
 # development
 .env
 .DS_STORE
+*.http

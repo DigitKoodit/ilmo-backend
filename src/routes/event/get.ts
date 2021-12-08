@@ -1,4 +1,5 @@
 import type { RequestHandler } from "express";
+import { responseMessage } from "../../helpers/errorResponse";
 import { getEventContentCached } from "../../services/contentful";
 import { database } from "../../services/database";
 
@@ -21,7 +22,7 @@ export const eventGetHandler: RequestHandler<{ slug: string }> = async (
     const eventInfo = await getEventContentCached(slug);
 
     if (!eventInfo) {
-      return res.status(404).json({ status: 404, message: "event not found" });
+      return responseMessage(res, 404, "event not found");
     }
 
     // create new entry in database

@@ -15,7 +15,7 @@ export const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  extraInfo: {
+  extraFields: {
     type: Map,
     of: mongoose.Schema.Types.Mixed,
   },
@@ -29,8 +29,25 @@ export interface User extends Document {
   firstName: string;
   lastName: string;
   email: string;
-  extraInfo: Record<string, any>;
+  extraFields: { [key: string]: string | string[] };
   dateEnrolled: Date;
 }
 
 userSchema.plugin(uniqueValidator);
+
+export const isUser = (v: unknown): v is User => {
+  return (
+    !!v &&
+    v instanceof Object &&
+    v.hasOwnProperty("firstName") &&
+    typeof v["firstName"] === "string" &&
+    v.hasOwnProperty("lastName") &&
+    typeof v["lastName"] === "string" &&
+    v.hasOwnProperty("email") &&
+    typeof v["email"] === "string" &&
+    v.hasOwnProperty("extraFields") &&
+    typeof v["extraFields"] === "object" &&
+    v.hasOwnProperty("dateEnrolled") &&
+    (typeof v["dateEnrolled"] === "string" || v["dateEnrolled"] instanceof Date)
+  );
+};

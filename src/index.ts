@@ -3,6 +3,7 @@ import { apiRouter } from "./routes";
 import type { IlmoServer } from "./types/server";
 import { database } from "./services/database";
 import { config } from "dotenv";
+import cors from "cors";
 config();
 
 /**
@@ -16,6 +17,10 @@ const initServer = async () => {
     app,
     database: dbInstance,
   };
+
+  // TODO: config CORS more strictly
+  app.use(cors());
+  app.use(express.json());
 
   // attach routers
   app.use("/api", apiRouter);

@@ -39,7 +39,7 @@ const getEnrollData = async (slug: string): Promise<EnrollData> => {
  */
 const canEnroll = async (
   event: EnrollData
-): Promise<"yes" | "reserve" | "no"> => {
+): Promise<"main" | "reserve" | "none"> => {
   // fetch cached event info from Contentful
   const eventContent = await getEventContentCached(event.slug);
   if (!eventContent) {
@@ -48,9 +48,9 @@ const canEnroll = async (
 
   const { spots, reserveSpots } = eventContent.fields;
 
-  if (event.accepted.length < spots) return "yes";
+  if (event.accepted.length < spots) return "main";
   if (event.reserve.length < reserveSpots) return "reserve";
-  return "no";
+  return "none";
 };
 
 /**
@@ -60,19 +60,36 @@ const canEnroll = async (
  * If there is no room in the main spots, the user is enrolled as a reserve.
  * If there is no room in the reserve spots either, the user is not enrolled.
  */
-const enrollUser = async (event: EnrollData, user: User) => {
+const enrollUser = async (
+  event: EnrollData,
+  user: User
+): Promise<"main" | "reserve" | "none"> => {
   const available = await canEnroll(event);
 
   switch (available) {
-    case "yes":
-      await event.update({ $push: { accepted: user } }).exec();
+    case "main":
+      await event.updateOne({ $push: { accepted: user } }).exec();
       break;
     case "reserve":
-      await event.update({ $push: { reserve: user } }).exec();
+      await event.updateOne({ $push: { reserve: user } }).exec();
       break;
-    case "no":
-      throw new Error("event has no available spots");
+    case "none":
+      break;
   }
+
+  return available;
+};
+
+/**
+ * Checks if the user has already enrolled in the given event
+ */
+const userEnrollStatus = (
+  event: EnrollData,
+  mail: string
+): "main" | "reserve" | "none" => {
+  if (event.accepted.find((u) => u.email === mail)) return "main";
+  if (event.reserve.find((u) => u.email === mail)) return "reserve";
+  return "none";
 };
 
 export const database = {
@@ -80,5 +97,6 @@ export const database = {
   createEnrollData,
   getEnrollData,
   canEnroll,
-  addUser: enrollUser,
+  enrollUser,
+  userEnrollStatus,
 };
