@@ -1,20 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["esnext"],
-    "allowJs": true,
+    "target": "esnext",
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "baseUrl": "src/",
-    "outDir": "dist/",
-    "paths": {
-      "@/*": ["./*"]
-    }
+    "baseUrl": "./src",
+    "outDir": "dist"
   },
-  "include": ["**/*.ts", "**/*.js"],
+  "include": ["src/*"],
   "exclude": ["node_modules"]
 }

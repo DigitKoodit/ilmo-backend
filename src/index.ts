@@ -1,20 +1,20 @@
 import express from "express";
 import { apiRouter } from "./routes";
-import { IlmoServer } from "./types/server";
-import { initDatabase } from "./services/database";
+import type { IlmoServer } from "./types/server";
+import { database } from "./services/database";
 import { config } from "dotenv";
+config();
 
 /**
  * Connects to the database then starts the server.
  */
 const initServer = async () => {
-  config();
   const app = express();
-  const database = await initDatabase();
+  const dbInstance = await database.init();
 
   const ilmoServer: IlmoServer = {
     app,
-    database,
+    database: dbInstance,
   };
 
   // attach routers
