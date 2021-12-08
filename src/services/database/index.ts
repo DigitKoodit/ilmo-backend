@@ -20,7 +20,7 @@ const init = async () => {
  * Inserts a new empty event into the database
  */
 const createEnrollData = async (slug: string): Promise<EnrollData> => {
-  return await EnrollDataModel.create({ slug, accepted: [], reserve: [] });
+  return await EnrollDataModel.create({ slug, main: [], reserve: [] });
 };
 
 /**
@@ -48,7 +48,7 @@ const canEnroll = async (
 
   const { spots, reserveSpots } = eventContent.fields;
 
-  if (event.accepted.length < spots) return "main";
+  if (event.main.length < spots) return "main";
   if (event.reserve.length < reserveSpots) return "reserve";
   return "none";
 };
@@ -68,7 +68,7 @@ const enrollUser = async (
 
   switch (available) {
     case "main":
-      await event.updateOne({ $push: { accepted: user } }).exec();
+      await event.updateOne({ $push: { main: user } }).exec();
       break;
     case "reserve":
       await event.updateOne({ $push: { reserve: user } }).exec();
@@ -85,10 +85,10 @@ const enrollUser = async (
  */
 const userEnrollStatus = (
   event: EnrollData,
-  mail: string
+  email: string
 ): "main" | "reserve" | "none" => {
-  if (event.accepted.find((u) => u.email === mail)) return "main";
-  if (event.reserve.find((u) => u.email === mail)) return "reserve";
+  if (event.main.find((u) => u.email === email)) return "main";
+  if (event.reserve.find((u) => u.email === email)) return "reserve";
   return "none";
 };
 

@@ -1,4 +1,4 @@
-import type { Document, ObjectId } from "mongoose";
+import type { Document } from "mongoose";
 import mongoose from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
 import { User, userSchema } from "./user";
@@ -9,7 +9,7 @@ const enrollDataSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    accepted: {
+    main: {
       type: [userSchema],
       required: true,
     },
@@ -23,7 +23,7 @@ const enrollDataSchema = new mongoose.Schema(
 
 export interface EnrollData extends Document {
   slug: string;
-  accepted: User[];
+  main: User[];
   reserve: User[];
 }
 

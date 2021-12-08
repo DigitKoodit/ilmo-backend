@@ -5,5 +5,5 @@ export const responseMessage = (
   status: number,
   message: string
 ) => {
-  return res.status(status).json({ message });
+  return res.status(status).json({ status, message });
 };

@@ -14,7 +14,7 @@ export const validateAndCleanUser = (
   const validatedExtraFields = {};
 
   for (const field of enrollForm.fields.fields) {
-    const fieldName = field.fields.title;
+    const fieldName = field.sys.id;
 
     const userFieldValue = user.extraFields[fieldName];
 
