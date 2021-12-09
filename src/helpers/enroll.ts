@@ -19,7 +19,7 @@ export const validateAndCleanUser = (
     const userFieldValue = user.extraFields[fieldName];
 
     // all required fields must be present
-    if (!user.extraFields.hasOwnProperty(fieldName)) {
+    if (!user.extraFields[fieldName]) {
       if (field.fields.required) {
         console.log("missing field:", fieldName);
         return null;
